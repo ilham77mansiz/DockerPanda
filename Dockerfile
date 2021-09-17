@@ -9,7 +9,9 @@ WORKDIR /ilham/
 # http://bugs.python.org/issue19846
 ENV LANG C.UTF-8
 
-RUN apt -qq update && apt -qq upgrade -y
+
+RUN apt-get autoremove --purge
+RUN apt-get update && apt upgrade -y && apt-get install sudo apt-utils -y # buildkit
 RUN apt-get install -y bash \
     build-essential \
     cmake \
@@ -76,21 +78,14 @@ RUN apt-get install -y bash \
     zlib1g \
     zlib1g-dev
 
-# Install google chrome
-RUN sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' && \
-    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-    apt-get -qq update && apt-get -qq install -y google-chrome-stable
-
-# Install chromedriver
-RUN wget -N https://chromedriver.storage.googleapis.com/87.0.4280.88/chromedriver_linux64.zip -P ~/ && \
-    unzip ~/chromedriver_linux64.zip -d ~/ && \
-    rm ~/chromedriver_linux64.zip && \
-    mv -f ~/chromedriver /usr/bin/chromedriver && \
-    chown root:root /usr/bin/chromedriver && \
-    chmod 0755 /usr/bin/chromedriver
-
-# Install python requirements
-ADD https://raw.githubusercontent.com/ilham77mansiz/-PETERCORD-/Petercord-Userbot/requirements.txt requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
-
-CMD ["bash"]
+RUN pip3 install --upgrade pip setuptools 
+RUN if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi 
+RUN if [ ! -e /usr/bin/python ]; then ln -sf /usr/bin/python3 /usr/bin/python; fi 
+RUN rm -r /root/.cache
+RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && apt install -y ./google-chrome-stable_current_amd64.deb && rm google-chrome-stable_current_amd64.deb
+RUN wget https://chromedriver.storage.googleapis.com/88.0.4324.96/chromedriver_linux64.zip && unzip chromedriver_linux64.zip && chmod +x chromedriver && mv -f chromedriver /usr/bin/ && rm chromedriver_linux64.zip
+RUN git clone https://github.com/xditya/TeleBot /root/telebot
+RUN mkdir /root/PandaX_Userbot/bin/
+WORKDIR /root/PandaX_Userbot/
+RUN chmod +x /usr/local/bin/*
+RUN pip3 install -r requirements.txt
