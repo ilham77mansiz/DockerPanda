@@ -88,4 +88,4 @@ RUN git clone https://github.com/ilhammansiz/PandaX_Userbot /root/PandaX_Userbot
 RUN mkdir /root/PandaX_Userbot/bin/
 WORKDIR /root/PandaX_Userbot/
 RUN chmod +x /usr/local/bin/*
-RUN pip3 install -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
