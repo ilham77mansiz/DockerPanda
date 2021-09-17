@@ -74,7 +74,7 @@ RUN apt-get install -y bash \
     yasm \
     zip \
     zlib1g \
-    zlib1g-dev \
+    zlib1g-dev
 
 # Install google chrome
 RUN sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' && \
