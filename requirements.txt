@@ -36,3 +36,4 @@ PyDictionary
 PyPDF2
 psutil
 requests>=2.18.4
+httplib2==0.13.1
